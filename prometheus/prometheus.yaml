@@ -7,8 +7,11 @@ scrape_configs:
     static_configs:
       - targets: ['localhost:9090']
 
-  - job_name: 'spring-actuator-1'
-    metrics_path: '/actuator/prometheus' # Job to scrape application metrics
-    scrape_interval: 5s
+  # - job_name: 'spring-actuator-1'
+  #   metrics_path: '/actuator/prometheus'
+  #   scrape_interval: 5s
+  #   static_configs:
+  #     - targets: ['host.docker.internal:3000']
+  - job_name: 'otel-collector'
     static_configs:
-      - targets: ['host.docker.internal:3000']
+      - targets: ['otel-collector:8889']
