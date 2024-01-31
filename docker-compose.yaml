@@ -2,6 +2,7 @@ version: '2'
 services:
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
+    restart: always
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
@@ -14,6 +15,7 @@ services:
       - zookeeper
     ports:
       - 29092:29092
+    restart: always
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
@@ -25,7 +27,7 @@ services:
   grafana:
     image: grafana/grafana-enterprise
     container_name: grafana
-    restart: unless-stopped
+    restart: always
     ports:
       - '3009:3000'
     volumes:
@@ -34,8 +36,6 @@ services:
   prometheus:
     image: prom/prometheus
     restart: always
-    # extra_hosts:
-    #   - host.docker.internal:host-gateway
     ports:
       - 9090:9090
     volumes:
@@ -60,23 +60,19 @@ services:
       - 4318:4318 # OTLP http receiver
       - 55679:55679 # zpages extension
     depends_on:
-      - jaeger
       - zipkin
 
-  jaeger:
-    image: jaegertracing/all-in-one:latest
-    restart: always
-    ports:
-      - 16686:16686
-      - 14268
-      - 14250
-    environment:
-      - COLLECTOR_OTLP_ENABLED=true
   zipkin:
     image: openzipkin/zipkin:latest
     restart: always
     ports:
       - 9411:9411
+
+  loki:
+    image: grafana/loki:latest
+    command: -config.file=/etc/loki/local-config.yaml
+    ports:
+      - 3100:3100
 
 volumes:
   prometheus-data:
