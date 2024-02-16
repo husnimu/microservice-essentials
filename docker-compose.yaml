@@ -36,6 +36,8 @@ services:
   prometheus:
     image: prom/prometheus
     restart: always
+    extra_hosts:
+      - host.docker.internal:host-gateway
     ports:
       - 9090:9090
     volumes:
@@ -43,6 +45,17 @@ services:
       - prometheus-data:/prometheus
     command:
       - --config.file=/etc/prometheus/prometheus.yaml
+
+  alertmanager:
+    image: quay.io/prometheus/alertmanager
+    container_name: alertmanager
+    ports:
+      - "9093:9093"
+    restart: always
+    volumes:
+      - ./alert-manager/tmp:/data
+      - ./alert-manager/config:/config
+    command: --config.file=/config/alertmanager.yaml --log.level=debug
 
   otel-collector:
     image: otel/opentelemetry-collector-contrib
@@ -58,7 +71,7 @@ services:
       - 13133:13133
       - 4317:4317
       - 4318:4318
-      - 55679:55679
+      - 60000:55679
     depends_on:
       - zipkin
 

@@ -1,0 +1,11 @@
+route:
+  receiver: server-down
+  repeat_interval: 1m
+receivers:
+  - name: 'server-down'
+    email_configs:
+      - to: 'husni060300@gmail.com'
+        from: 'tutorial.outbox@gmail.com'
+        smarthost: 'sandbox.smtp.mailtrap.io:587'
+        auth_username: '115deb97fd0742'
+        auth_password: 'cd91855ad93171'

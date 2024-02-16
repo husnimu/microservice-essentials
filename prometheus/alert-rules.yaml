@@ -1,0 +1,28 @@
+groups:
+  - name: generate-spr
+    rules:
+      # Triggers a critical alert if a server is down for more than 1 minute.
+      - alert: OtelServerDown
+        expr: up{job="otel-collector"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Server {{ $labels.instance }} down"
+          description: "{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 1 minute."
+      - alert: ProducerDown
+        expr: up{job="app-producer"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Server {{ $labels.instance }} down"
+          description: "{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 1 minute."
+      - alert: ConsumerDown
+        expr: up{job="app-consumer"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Server {{ $labels.instance }} down"
+          description: "{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 1 minute."
