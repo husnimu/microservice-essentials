@@ -20,11 +20,20 @@ scrape_configs:
     scrape_interval: 5s
     static_configs:
       - targets: ['host.docker.internal:3000']
+        labels:
+          application: 'App Producer'
   - job_name: 'app-consumer'
-    metrics_path: '/actuator/prometheus'
+    metrics_path: '/actuator/health'
     scrape_interval: 5s
     static_configs:
       - targets: ['host.docker.internal:3001']
+        labels:
+          application: 'App Consumer'
+  - job_name: 'kafka'
+    scrape_interval: 10s
+    static_configs:
+      - targets: ['kafka-exporter:9308']
+    metrics_path: /metrics
 rule_files:
   - 'alert-rules.yaml'
 alerting:
